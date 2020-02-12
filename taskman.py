@@ -1,5 +1,6 @@
 from glob import glob
 import json
+import pathlib
 import subprocess
 import inspect
 import time
@@ -12,12 +13,16 @@ from os.path import expandvars
 from pathlib import Path
 
 HOMEDIR = expandvars('$HOME')
-DB_STARTED_TASKS = HOMEDIR + '/taskman/started'
 SCRIPTS_FOLDER = env_vars.get('TASKMAN_SCRIPTS', HOMEDIR + '/script_moab')  # Dir with your scripts. Contains /taskman
-CKPT_FOLDER = env_vars['TASKMAN_CKPTS']
+CKPT_FOLDER = env_vars.get('TASKMAN_CKPTS', HOMEDIR + '/taskman_chkpts')
+
 SLURM_MODE = 'TASKMAN_USE_SLURM' in env_vars
 MAX_LINES = env_vars.get('TASKMAN_MAXLINES', 30)
 BUCKET_FOLDER = env_vars.get('TASKMAN_BUCKET', None)
+
+DB_STARTED_TASKS = HOMEDIR + '/taskman/started'
+DB_FINISHED_TASKS = HOMEDIR + '/taskman/finished'
+DB_DEAD_TASKS = HOMEDIR + '/taskman/dead'
 
 
 def fmt_time(seconds):
@@ -229,11 +234,11 @@ class Taskman(object):
 
     @staticmethod
     def read_task_db():
-        with open(HOMEDIR + '/taskman/started', 'r') as f:
+        with open(DB_STARTED_TASKS, 'r') as f:
             started_tasks_csv = f.readlines()
-        with open(HOMEDIR + '/taskman/dead', 'r') as f:
+        with open(DB_DEAD_TASKS, 'r') as f:
             dead_tasks_csv = f.readlines()
-        with open(HOMEDIR + '/taskman/finished', 'r') as f:
+        with open(DB_FINISHED_TASKS, 'r') as f:
             finished_tasks_csv = f.readlines()
 
         if len(started_tasks_csv) == 0 or len(started_tasks_csv) == 1 and started_tasks_csv[0].strip() == '':
@@ -511,8 +516,12 @@ def results(task_name):
 
 
 def _clean(task_name=None, clean_all=False):
-    shutil.copyfile(DB_STARTED_TASKS,
-                    HOMEDIR + '/taskman/old/started_' + datetime.now().strftime("%m-%d_%H-%M-%S"))
+    started_path = pathlib.Path(DB_STARTED_TASKS)
+    bkup_folder = started_path.parent / "old"
+    if not bkup_folder.exists():
+        bkup_folder.mkdir()
+    bkup_file = bkup_folder / "started_bkup_{}".format(datetime.now().strftime("%m-%d_%H-%M-%S"))
+    shutil.copyfile(DB_STARTED_TASKS, str(bkup_file))
 
     started_tasks, dead_tasks, finished_tasks = Taskman.read_task_db()
 
