@@ -1,5 +1,6 @@
 from glob import glob
 import json
+import os
 import pathlib
 import subprocess
 import inspect
@@ -84,6 +85,17 @@ class Taskman(object):
     jobs = {}
     columns = set()
     jobid_nchars = 7
+
+    @staticmethod
+    def init():
+        """ Create database files if they don't exist.
+        """
+        for db in [DB_STARTED_TASKS, DB_FINISHED_TASKS, DB_DEAD_TASKS]:
+            db_path = pathlib.Path(db)
+            if not db_path.exists():
+                if not db_path.parent.exists():
+                    os.makedirs(str(db_path.parent))
+                db_path.touch()
 
     @staticmethod
     def get_cmd_output(args, timeout=20):
@@ -566,6 +578,7 @@ cmds = {'sub': submit, 'fromckpt': fromckpt, 'multisub': multi_sub, 'cont': cont
 
 
 if __name__ == '__main__':
+    Taskman.init()
     while True:
         command_mode = False
         try:
