@@ -563,6 +563,12 @@ def regen_script(task_name):
             print('Regenerated', script)
 
 
+def quit_cmd():
+    """Quit taskman"""
+    print("Exiting taskman...")
+    exit(0)
+
+
 def short_str(x, l):
     """Shorten string from the center"""
     if len(x) <= l:
@@ -574,7 +580,8 @@ def short_str(x, l):
 
 # Available commands
 cmds = {'sub': submit, 'fromckpt': fromckpt, 'multisub': multi_sub, 'cont': continu, 'cancel': cancel, 'copy': copy,
-        'pack': pack, 'results': results, 'show': show, 'clean': clean, 'cleanall': cleanall, 'regen': regen_script}
+        'pack': pack, 'results': results, 'show': show, 'clean': clean, 'cleanall': cleanall, 'regen': regen_script,
+        'quit': quit_cmd}
 
 
 if __name__ == '__main__':
