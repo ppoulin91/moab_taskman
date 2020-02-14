@@ -2,6 +2,7 @@ from glob import glob
 import json
 import os
 import pathlib
+import random
 import subprocess
 import inspect
 import time
@@ -179,6 +180,7 @@ class Taskman(object):
             line = line.replace('$TASKMAN_NAME', job.name)
             line = line.replace('$TASKMAN_ID', job.task_id)
             line = line.replace('$TASKMAN_ARGS', job.args_str)
+            line = line.replace('$TASKMAN_RANDINT', str(int(random.random() * 10000)))
             script_lines.append(line)
 
         # Write script
