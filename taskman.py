@@ -456,6 +456,9 @@ def multi_sub():
         i = input()
         if i == '':
             break
+        # Ignore comment lines
+        if i[0] == '#':
+            continue
         a.append(i)
     print('Tasks to submit:')
     for i in a:
