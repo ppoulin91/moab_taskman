@@ -154,7 +154,7 @@ class Taskman(object):
             return None
 
         showq_lines = output.split('\n')
-        showq_lines = [l for l in showq_lines]
+        showq_lines = [l for l in showq_lines if l]
         statuses = {}
         for line in showq_lines[1:]:  # skip header
             tokens = line.split()
