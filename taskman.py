@@ -15,7 +15,7 @@ from os import makedirs, environ as env_vars
 from os.path import expandvars
 from pathlib import Path
 
-HOMEDIR = expandvars('$HOME')
+HOMEDIR = expandvars('$HOME') + '/experiments'
 SCRIPTS_FOLDER = env_vars.get('TASKMAN_SCRIPTS', HOMEDIR + '/script_moab')  # Dir with your scripts. Contains /taskman
 CKPT_FOLDER = env_vars.get('TASKMAN_CKPTS', HOMEDIR + '/taskman_chkpts')
 
