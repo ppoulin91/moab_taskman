@@ -157,8 +157,9 @@ class Taskman(object):
         showq_lines = [l for l in showq_lines]
         statuses = {}
         for line in showq_lines[1:]:  # skip header
-            slurm_id = line[:8].strip()
-            slurm_state = line[47:50].strip()
+            tokens = line.split()
+            slurm_id = tokens[0]
+            slurm_state = tokens[4]
             statuses[slurm_id] = slurm_state
         return statuses
 
@@ -365,10 +366,10 @@ class Taskman(object):
         line_fmt = '{:<8} {:<30} {:<21} {:<' + str(Taskman.jobid_nchars) + '} {:<7}' + ' {:<12}' * len(Taskman.columns)
         print('\033[1m' + line_fmt.format('Status', 'Task name', 'Task id', 'Moab id', 'Updated',
                                           *sorted(Taskman.columns)) + '\033[0m')
-        
+
         waiting_tasks = [j for j in Taskman.jobs.values() if j.status == JobStatus.Waiting or j.status_msg == 'blocked']
         non_waiting_tasks = [j for j in Taskman.jobs.values() if j not in waiting_tasks]
-        
+
         def print_job_line(job):
             # Get report data
             report_columns = []
@@ -399,7 +400,7 @@ class Taskman(object):
             total_not_shown = len(Taskman.jobs) - MAX_LINES
             print('[ ... {} tasks not shown - {} waiting/blocked tasks in total ... ]'.format(total_not_shown,
                                                                                       len(waiting_tasks)))
-            
+
 
     @staticmethod
     def update(resume_incomplete_tasks=True):
