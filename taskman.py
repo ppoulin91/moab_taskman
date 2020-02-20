@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from glob import glob
 import json
 import os
