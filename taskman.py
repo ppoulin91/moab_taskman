@@ -171,9 +171,12 @@ class Taskman(object):
             template = f.readlines()
 
         # Append post exec bash script
-        with open(SCRIPTS_FOLDER + '/taskman_post_exec.sh', 'r') as f:
-            post_exec = f.readlines()
-        template += post_exec
+
+        post_exec_path = SCRIPTS_FOLDER + '/taskman_post_exec.sh'
+        if os.path.exists(post_exec_path):
+            with open(post_exec_path, 'r') as f:
+                post_exec = f.readlines()
+            template += post_exec
 
         # Replace variables
         script_lines = []
