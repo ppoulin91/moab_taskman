@@ -17,6 +17,7 @@ from pathlib import Path
 
 HOMEDIR = expandvars('$HOME') + '/experiments'
 SCRIPTS_FOLDER = env_vars.get('TASKMAN_SCRIPTS', HOMEDIR + '/script_moab')  # Dir with your scripts. Contains /taskman
+TEMPLATES_FOLDER = env_vars.get('TASKMAN_TEMPLATES', HOMEDIR + '/taskman_templates')
 CKPT_FOLDER = env_vars.get('TASKMAN_CKPTS', HOMEDIR + '/taskman_chkpts')
 
 SLURM_MODE = 'TASKMAN_USE_SLURM' in env_vars
@@ -168,12 +169,12 @@ class Taskman(object):
         script_path, script_file = Job.get_path(job.name, job.task_id)
 
         # Get template
-        with open(SCRIPTS_FOLDER + '/' + job.template_file + '.sh', 'r') as f:
+        with open(TEMPLATES_FOLDER + '/' + job.template_file + '.sh', 'r') as f:
             template = f.readlines()
 
         # Append post exec bash script
 
-        post_exec_path = SCRIPTS_FOLDER + '/taskman_post_exec.sh'
+        post_exec_path = TEMPLATES_FOLDER + '/taskman_post_exec.sh'
         if os.path.exists(post_exec_path):
             with open(post_exec_path, 'r') as f:
                 post_exec = f.readlines()
