@@ -483,6 +483,12 @@ def continu(task_name):
             Taskman.submit(job)
 
 
+def resume_lost():
+    for task_id, job in Taskman.jobs.items():
+        if job.status == JobStatus.Lost:
+            Taskman.submit(job)
+
+
 def cancel(task_name):
     for task_id, job in Taskman.jobs.items():
         if job.status.cancellable and _match(task_name, job.name):
@@ -592,7 +598,7 @@ def short_str(x, l):
 # Available commands
 cmds = {'sub': submit, 'fromckpt': fromckpt, 'multisub': multi_sub, 'cont': continu, 'cancel': cancel, 'copy': copy,
         'pack': pack, 'results': results, 'show': show, 'clean': clean, 'cleanall': cleanall, 'regen': regen_script,
-        'quit': quit_cmd}
+        'resume_lost': resume_lost, 'quit': quit_cmd}
 
 
 if __name__ == '__main__':
